@@ -76,7 +76,7 @@ def get_folders_and_md_files_and_file_text(path):
 
     return items['subfolders'], items['md_files'], file_text, relative_file_dir, relative_file_name, relative_file_path
 
-def getContent(file_path):
+def get_html_content(file_path):
     # get abs and relative paths and names
     subfolders, md_files, file_text, relative_file_dir, relative_file_name, relative_file_path = get_folders_and_md_files_and_file_text(file_path)
 
@@ -99,8 +99,8 @@ def getContent(file_path):
     return _html
 
 @app.get("/{file_path:path}", response_class=HTMLResponse)
-def getHtml(file_path: str):
-    return getContent(file_path)
+def get_html(file_path: str):
+    return get_html_content(file_path)
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
