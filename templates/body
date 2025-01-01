@@ -1,0 +1,10 @@
+<div class="parent">
+    <div class="left" style="background-color:#f4f1ea;">
+        <h4>Folder: {{relative_file_path}}</h4>
+        {{navigation}}
+    </div>
+    <div class="right">
+        <h4>File: {{relative_file_name}}</h4>
+        {{content}}
+    </div>
+</div>
