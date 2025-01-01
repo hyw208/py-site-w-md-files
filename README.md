@@ -1,4 +1,9 @@
+#What is it? 
+It's a website using a folder of markdown files. 
 
+#How to run it? 
+
+#Misc
 
 1. UV installtion on mac: brew install uv
 
