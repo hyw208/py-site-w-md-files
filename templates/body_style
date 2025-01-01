@@ -16,6 +16,7 @@ body {
     overflow: auto;
     padding: 1em;
     border-radius: 10px;
+    background-color:#f4f1ea;
 }
 .right {
     flex-grow: 1;

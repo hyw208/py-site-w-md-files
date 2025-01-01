@@ -1,5 +1,5 @@
 <div class="parent">
-    <div class="left" style="background-color:#f4f1ea;">
+    <div class="left">
         <h4>Folder: {{relative_file_path}}</h4>
         {{folder}}
     </div>
