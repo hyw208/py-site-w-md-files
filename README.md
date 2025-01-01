@@ -1,5 +1,5 @@
 # What is it? 
-It's a website using a folder of markdown files. 
+It's a website using a folder of sub folders & markdown files. 
 
 # How to run it? 
 
