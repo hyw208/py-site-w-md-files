@@ -16,10 +16,10 @@ logging.Formatter.converter = time.gmtime  # Ensures UTC time is used
 
 # jinja templates
 environment = Environment(loader=FileSystemLoader("templates/"))
-folder = environment.get_template("folder")
-header_style = environment.get_template("header_style")
-body_style = environment.get_template("body_style")
-header = environment.get_template("header")
+style = environment.get_template("style")
+header = environment.get_template("header") 
+folder = environment.get_template("folder") # to render folder 
+content = environment.get_template("content") # to render md text
 body = environment.get_template("body")
 html = environment.get_template("html")
 
@@ -71,24 +71,20 @@ def getContent(file_path):
     logging.info("#######" + _folder)
 
     # get file content and render md into html
+    md_text = ""
     if file_name: 
         with open(file_name, "r") as f:
-            md_text = f.read()
-            _content = markdown.markdown(md_text)
-    else: 
-        _content = ""
+            md_text = markdown.markdown(f.read())  
+    _content = content.render(md_text=md_text)
     
     # now render all 
-    _header_style = header_style.render()
+    _style = style.render()
     _header = header.render()
-    _body_style = body_style.render()
     _body = body.render(relative_file_path=relative_file_path, 
                             relative_file_name=relative_file_name, 
                                 folder=_folder, content=_content)
 
-    _html = html.render(header_style=_header_style, 
-                            body_style=_body_style,
-                                header=_header, body=_body)
+    _html = html.render(style=_style, header=_header, body=_body)
     return _html
 
 @app.get("/{file_path:path}", response_class=HTMLResponse)

@@ -4,10 +4,7 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <style>
-            {{header_style}}
-        </style>
-        <style>
-            {{body_style}}
+            {{style}}
         </style>
     </head>
     <body>

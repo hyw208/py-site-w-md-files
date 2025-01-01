@@ -1,5 +1,5 @@
 <ol>
-    {% for item in items %}
-        <li><a href="/{{relative_file_path}}{{item}}">{{item}}</a></li>
-    {% endfor %}
+{% for item in items %}
+    <li><a href="/{{relative_file_path}}{{item}}">{{item}}</a></li>
+{% endfor %}
 </ol>
