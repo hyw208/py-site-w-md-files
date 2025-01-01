@@ -1,5 +1,5 @@
 # What is it? 
-It's a simple website using a folder of sub folders & markdown files. 
+It's a simple website pointing to a local folder containing sub-folders & markdown files. 
 
 ![alt text](screen.png)
 
