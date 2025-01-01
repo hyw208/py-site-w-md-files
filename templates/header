@@ -1,4 +1,4 @@
-<div>
+<div class="header">
     <h1>Welcome to Markdown Website</h1>
     <nav>
         <a href="/home.md">Home</a>
