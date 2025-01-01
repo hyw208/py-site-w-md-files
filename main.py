@@ -6,6 +6,7 @@ import markdown
 from pathlib import Path
 import logging
 import time
+import uvicorn
 
 logging.basicConfig(
     level=logging.INFO,  # Set the minimum level to log
@@ -28,64 +29,70 @@ app = FastAPI()
 root = os.getenv('MD_FILES_ROOT', 'root') 
 logging.info(f"####### root directory of md files: {root} #######")
 
-def get_folders_and_md_files(file_path):
-    logging.info(f"####### file_path: {file_path} #######")
-    
+def get_folders_and_md_files_and_file_text(path):
+    # full path starting from root path ps. os.path.join(root, path) doesn't give desire result when path is empty
+    file_path = os.sep.join([root, path]) 
+    logging.info(f"####### file path with root: {file_path} #######")
+    # path from url without the leading root path
+    relative_file_path = file_path.removeprefix(root) 
+    logging.info(f"####### relative file path w/o root: {relative_file_path} #######")
 
-def getPathsAndFileNames(file_path):
-    logging.info(f"####### file_path: {file_path} #######")
-    
-    sep = os.sep
-    # now work with file system path starting from root
-    if file_path: 
-        # not empty string, eg. file1.md, folder1
-        # file_path = f"{root}/{file_path}"
-        file_path = os.path.join(root, file_path)
-    else: 
-        # empty string, meaning root 
-        file_path = root
+    if not os.path.exists(file_path):
+        raise ValueError(f"The path {path} does not exist!")
 
-    tokens = file_path.split(sep)
-    if file_path.endswith(".md"): 
-        # it has file name
-        file_name = file_path
-        file_path = sep.join(tokens[:-1])
-        relative_file_name = sep.join(tokens[1:])
-        relative_file_path = sep.join(tokens[1:-1])
-    else: 
-        # it has no file name
-        file_name = ""
-        # file_path = file_path
-        relative_file_name = ""
-        relative_file_path = sep.join(tokens[1:])
-    
-    logging.info(f"####### abs full file path: {file_path} #######")
-    logging.info(f"####### abs file name: {file_name} #######")
-    logging.info(f"####### relative file path: {relative_file_path} #######")
-    
-    return file_path, file_name, relative_file_path, relative_file_name
+    items = {
+        'subfolders': [],
+        'md_files': []
+    }
+
+    file_name = ""
+    file_dir = ""
+    relative_file_dir = ""
+    relative_file_name = ""
+    file_text = ""
+    if os.path.isfile(file_path):
+        logging.info(f"####### {file_path} is file #######")
+        file_name = os.path.basename(file_path)
+        file_dir = os.path.dirname(file_path)
+        relative_file_name = file_name.removeprefix(root)
+        relative_file_dir = file_dir.removeprefix(root)
+        try:
+            with open(file_path, "r") as f:
+                file_text = f.read() 
+        except Exception as ex:
+                file_text = f"error reading file {file_path}, {ex}"
+        file_path = file_dir
+    else:
+        logging.info(f"####### {file_path} is directory #######")
+
+    with os.scandir(file_path) as entries:
+        for entry in entries:
+            if entry.is_file() and entry.name.lower().endswith(".md"):
+                _fn = entry.path.removeprefix(root)
+                items['md_files'].append({'name': entry.name,'relative_path': _fn})
+            elif entry.is_dir():
+                _sn = entry.path.removeprefix(root)
+                items['subfolders'].append({'name': entry.name,'relative_path': _sn})
+
+    return items['subfolders'], items['md_files'], file_text, relative_file_dir, relative_file_name, relative_file_path
 
 def getContent(file_path):
     # get abs and relative paths and names
-    file_path, file_name, relative_file_path, relative_file_name = getPathsAndFileNames(file_path)
+    subfolders, md_files, file_text, relative_file_dir, relative_file_name, relative_file_path = get_folders_and_md_files_and_file_text(file_path)
 
     # get sub folders and files & render folder portion
-    items = os.listdir(file_path)
-    _folder = folder.render(relative_file_path=(relative_file_path + "/" if relative_file_path else ""), items=items)
-    logging.info("#######" + _folder)
+    _folder = folder.render(subfolders=subfolders, md_files=md_files)
+    logging.debug("####### " + _folder)
 
     # get file content and render md into html
-    md_text = ""
-    if file_name: 
-        with open(file_name, "r") as f:
-            md_text = markdown.markdown(f.read())  
-    _content = content.render(md_text=md_text)
+    _content = content.render(file_text=markdown.markdown(file_text))
+    logging.debug("####### " + _content)
     
     # now render all 
     _style = style.render()
     _header = header.render()
     _body = body.render(relative_file_path=relative_file_path, 
-                            relative_file_name=relative_file_name, 
+                            relative_file_name=relative_file_name,
                                 folder=_folder, content=_content)
 
     _html = html.render(style=_style, header=_header, body=_body)
@@ -94,4 +101,6 @@ def getContent(file_path):
 @app.get("/{file_path:path}", response_class=HTMLResponse)
 def getHtml(file_path: str):
     return getContent(file_path)
-    
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)

@@ -1,5 +1,8 @@
 <ol>
-{% for item in items %}
-    <li><a href="/{{relative_file_path}}{{item}}">{{item}}</a></li>
+{% for subfolder in subfolders %}
+    <li><a href="{{subfolder.relative_path}}">{{subfolder.name}}</a></li>
+{% endfor %}
+{% for md_file in md_files %}
+    <li><a href="{{md_file.relative_path}}">{{md_file.name}}</a></li>
 {% endfor %}
 </ol>
