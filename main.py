@@ -16,17 +16,21 @@ logging.Formatter.converter = time.gmtime  # Ensures UTC time is used
 
 # jinja templates
 environment = Environment(loader=FileSystemLoader("templates/"))
-style = environment.get_template("style")
-header = environment.get_template("header") 
-folder = environment.get_template("folder") # to render folder 
-content = environment.get_template("content") # to render md text
-body = environment.get_template("body")
-html = environment.get_template("html")
+style = environment.get_template("style") # css styles
+header = environment.get_template("header") # to render horizontal nav panel
+folder = environment.get_template("folder") # to render folder panel
+content = environment.get_template("content") # to render md text panel
+body = environment.get_template("body") # to render combo of folder panel & md text panel
+html = environment.get_template("html") # to render html 
 
 app = FastAPI()
 
 root = os.getenv('MD_FILES_ROOT', 'root') 
 logging.info(f"####### root directory of md files: {root} #######")
+
+def get_folders_and_md_files(file_path):
+    logging.info(f"####### file_path: {file_path} #######")
+    
 
 def getPathsAndFileNames(file_path):
     logging.info(f"####### file_path: {file_path} #######")
