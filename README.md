@@ -1,6 +1,8 @@
 # What is it? 
 It's a website using a folder of sub folders & markdown files. 
 
+![alt text](image.png)
+
 # How to run it? 
 
 # Misc
