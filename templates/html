@@ -9,9 +9,9 @@
         <style>
             {{body_style}}
         </style>
-        {{header}}
     </head>
     <body>
+        {{header}}
         {{body}}
     </body>
 </html>
