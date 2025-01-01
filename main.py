@@ -16,7 +16,7 @@ logging.Formatter.converter = time.gmtime  # Ensures UTC time is used
 
 # jinja templates
 environment = Environment(loader=FileSystemLoader("templates/"))
-navigation = environment.get_template("navigation")
+folder = environment.get_template("folder")
 header_style = environment.get_template("header_style")
 body_style = environment.get_template("body_style")
 header = environment.get_template("header")
@@ -65,10 +65,10 @@ def getContent(file_path):
     # get abs and relative paths and names
     file_path, file_name, relative_file_path, relative_file_name = getPathsAndFileNames(file_path)
 
-    # get sub folders and files & render navigation portion
+    # get sub folders and files & render folder portion
     items = os.listdir(file_path)
-    _navigation = navigation.render(relative_file_path=(relative_file_path + "/" if relative_file_path else ""), items=items)
-    logging.info("#######" + _navigation)
+    _folder = folder.render(relative_file_path=(relative_file_path + "/" if relative_file_path else ""), items=items)
+    logging.info("#######" + _folder)
 
     # get file content and render md into html
     if file_name: 
@@ -84,7 +84,7 @@ def getContent(file_path):
     _body_style = body_style.render()
     _body = body.render(relative_file_path=relative_file_path, 
                             relative_file_name=relative_file_name, 
-                                navigation=_navigation, content=_content)
+                                folder=_folder, content=_content)
 
     _html = html.render(header_style=_header_style, 
                             body_style=_body_style,
