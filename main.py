@@ -1,6 +1,6 @@
 import os
 from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, FileResponse
 from jinja2 import Template, Environment, FileSystemLoader
 import markdown
 from pathlib import Path
@@ -97,6 +97,11 @@ def get_html_content(file_path):
 
     _html = html.render(style=_style, header=_header, body=_body)
     return _html
+
+@app.get("/icons/{name}")
+def get_icon(name: str):
+    # either file-icon.png or folder-icon.png
+    return FileResponse(f"{name}-icon.png")
 
 @app.get("/{file_path:path}", response_class=HTMLResponse)
 def get_html(file_path: str):

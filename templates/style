@@ -87,3 +87,9 @@ a:hover {
     border-color: #333333;
 }
 
+.folder-icon {
+    list-style-type: square;
+}
+.file-icon {
+    list-style-type: circle;
+}
