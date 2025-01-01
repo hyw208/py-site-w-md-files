@@ -1,7 +1,7 @@
 # What is it? 
 It's a simple website using a folder of sub folders & markdown files. 
 
-![alt text](image.png)
+![alt text](screen.png)
 
 # Installation 
 1. UV python package mgmt installtion: eg use 'brew install uv' on mac
