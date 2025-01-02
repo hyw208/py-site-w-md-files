@@ -26,7 +26,7 @@ html = environment.get_template("html") # to render html
 
 app = FastAPI()
 
-content = os.getenv('MD_FILES_content', 'content') 
+content = os.getenv('MD_FILES_DIR', 'content') 
 logging.info(f"####### content directory of md files: {content} #######")
 
 def get_folders_and_md_files_and_file_text(path):
