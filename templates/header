@@ -1,6 +1,6 @@
 <div class="header">
     <h1>{{website_name}}</h1>
-    <nav>
+    <nav class="nav">
         {% for item in items %}
         <a href="/{{item}}.md">{{item |capitalize }}</a>
         {% endfor %}
