@@ -98,10 +98,9 @@ def get_html_content(file_path):
     _html = html.render(style=_style, header=_header, body=_body)
     return _html
 
-@app.get("/icons/{name}")
-def get_icon(name: str):
-    # either file-icon.png or folder-icon.png
-    return FileResponse(f"{name}-icon.png")
+@app.get("/favicon.ico", include_in_schema=False)
+def get_favicon(name: str):
+    return FileResponse("screen.png")
 
 @app.get("/{file_path:path}", response_class=HTMLResponse)
 def get_html(file_path: str):
