@@ -26,11 +26,14 @@ html = environment.get_template("html") # to render html
 
 app = FastAPI()
 
+website_name = os.getenv('WEBSITE_NAME', 'Welcome to Markdown Website')
+logging.info(f"####### WEBSITE_NAME: {website_name} #######")
+
 content = os.getenv('MD_FILES_DIR', 'content') 
-logging.info(f"####### content directory of md files: {content} #######")
+logging.info(f"####### MD_FILES_DIR: {content} #######")
 
 header_items = os.getenv('HEADER_ITEMS', 'home,services,contact').split(",")
-logging.info(f"####### header items: {header_items} #######")
+logging.info(f"####### HEADER_ITEMS: {header_items} #######")
 
 def get_folders_and_md_files_and_file_text(path):
     logging.info(f"####### raw path w/o content dir: {path} #######")
@@ -108,7 +111,7 @@ def get_html_content(file_path):
     
     # now render all 
     _style = style.render()
-    _header = header.render(items=header_items)
+    _header = header.render(website_name=website_name, items=header_items)
     _body = body.render(rel_scan_dir=rel_scan_dir, 
                             file_name=file_name,
                                 folder=_folder, file=_file)

@@ -1,5 +1,5 @@
 <div class="header">
-    <h1>Markdown Website</h1>
+    <h1>{{website_name}}</h1>
     <nav>
         {% for item in items %}
         <a href="/{{item}}.md">{{item |capitalize }}</a>
