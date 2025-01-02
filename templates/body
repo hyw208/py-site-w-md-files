@@ -1,10 +1,10 @@
 <div class="container">
     <div class="folder">
-        <h4>Folder: {{relative_file_path}}</h4>
+        <h5>Folder: {{relative_file_path}}</h5>
         {{folder}}
     </div>
     <div class="file">
-        <h4>File: {{relative_file_name}}</h4>
+        <h5>File: {{relative_file_name}}</h5>
         {{file}}
     </div>
 </div>

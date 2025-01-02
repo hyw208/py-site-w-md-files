@@ -15,7 +15,7 @@ body {
 }
 .header h1 {
     font-size: 1.4rem;
-    margin: 0;
+    /* margin: 0; */
     font-weight: 600;
     padding-left: 10px;
 }
@@ -33,7 +33,7 @@ nav {
 nav a {
     color: #333333;
     text-decoration: none;
-    font-size: 1rem;
+    font-size: 0.9rem;
     padding: 8px 12px;
     border: 2px solid transparent;
     border-radius: 20px;
