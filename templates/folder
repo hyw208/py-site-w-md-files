@@ -1,8 +1,10 @@
-<ul>
-{% for subfolder in subfolders %}
-    <li class="folder-icon"><a href="{{subfolder.relative_path}}">{{subfolder.name}}</a></li>
-{% endfor %}
-{% for md_file in md_files %}
-    <li class="file-icon"><a href="{{md_file.relative_path}}">{{md_file.name}}</a></li>
-{% endfor %}
-</ul>
+<div>
+    <ul>
+    {% for subfolder in subfolders %}
+        <li class="folder-icon"><a href="{{subfolder.relative_path}}">{{subfolder.name}}</a></li>
+    {% endfor %}
+    {% for md_file in md_files %}
+        <li class="file-icon"><a href="{{md_file.relative_path}}">{{md_file.name}}</a></li>
+    {% endfor %}
+    </ul>
+</div>
