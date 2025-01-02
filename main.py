@@ -29,6 +29,9 @@ app = FastAPI()
 content = os.getenv('MD_FILES_DIR', 'content') 
 logging.info(f"####### content directory of md files: {content} #######")
 
+header_items = os.getenv('HEADER_ITEMS', 'home,services,contact').split(",")
+logging.info(f"####### header items: {header_items} #######")
+
 def get_folders_and_md_files_and_file_text(path):
     logging.info(f"####### raw path w/o content dir: {path} #######")
 
@@ -65,7 +68,7 @@ def get_folders_and_md_files_and_file_text(path):
         tokens = abs_path.split(os.sep)
         tokens[-1] = ""
         abs_file_dir = os.sep.join(tokens)
-        
+
         rel_file_dir = abs_file_dir.removeprefix(content)
         try:
             with open(abs_path, "r") as f:
@@ -105,7 +108,7 @@ def get_html_content(file_path):
     
     # now render all 
     _style = style.render()
-    _header = header.render()
+    _header = header.render(items=header_items)
     _body = body.render(rel_scan_dir=rel_scan_dir, 
                             file_name=file_name,
                                 folder=_folder, file=_file)

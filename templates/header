@@ -1,9 +1,14 @@
 <div class="header">
     <h1>Markdown Website</h1>
     <nav>
+        {% for item in items %}
+        <a href="/{{item}}.md">{{item |capitalize }}</a>
+        {% endfor %}
+        <!-- 
         <a href="/home.md">Home</a>
         <a href="/about.md">About</a>
         <a href="/services.md">Services</a>
-        <a href="/contact.md">Contact</a>
+        <a href="/contact.md">Contact</a> 
+        -->
     </nav>
 </div>
