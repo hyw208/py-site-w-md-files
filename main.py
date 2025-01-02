@@ -20,7 +20,7 @@ environment = Environment(loader=FileSystemLoader("templates/"))
 style = environment.get_template("style") # css styles
 header = environment.get_template("header") # to render horizontal nav panel
 folder = environment.get_template("folder") # to render folder panel
-content = environment.get_template("content") # to render md text panel
+file = environment.get_template("file") # to render md file panel
 body = environment.get_template("body") # to render combo of folder panel & md text panel
 html = environment.get_template("html") # to render html 
 
@@ -85,15 +85,15 @@ def get_html_content(file_path):
     logging.debug("####### " + _folder)
 
     # get file content and render md into html
-    _content = content.render(file_text=markdown.markdown(file_text))
-    logging.debug("####### " + _content)
+    _file = file.render(file_text=markdown.markdown(file_text))
+    logging.debug("####### " + _file)
     
     # now render all 
     _style = style.render()
     _header = header.render()
     _body = body.render(relative_file_path=relative_file_path, 
                             relative_file_name=relative_file_name,
-                                folder=_folder, content=_content)
+                                folder=_folder, file=_file)
 
     _html = html.render(style=_style, header=_header, body=_body)
     return _html

@@ -5,6 +5,6 @@
     </div>
     <div class="right">
         <h4>File: {{relative_file_name}}</h4>
-        {{content}}
+        {{file}}
     </div>
 </div>
