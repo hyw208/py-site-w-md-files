@@ -1,11 +1,20 @@
 [project]
 name = "py-site-w-md-files"
 version = "0.1.0"
-description = "simple website from folders of markdown files"
+description = "markdown website with a folder containing subfolders and markdown files"
 readme = "README.md"
+authors = [
+    { name = "hyw208", email = "hyw208@gmail.com" }
+]
 requires-python = ">=3.12"
 dependencies = [
     "fastapi[standard]>=0.115.6",
     "jinja2>=3.1.5",
     "markdown>=3.7",
 ]
+
+[tool.uv.workspace]
+members = ["md-website-pkg", "md-website-lib"]
+
+
+

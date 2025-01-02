@@ -22,12 +22,16 @@ Still trying to figure out how to use uv python package mgr to create cli app. M
 
 # Misc
 1. UV installtion on mac: brew install uv
-2. Init project: uv init py-site-w-md-files
-3. Launch vscode: code py-site-w-md-files
-4. Create .venv: uv venv --python 3.12
-5. Activate venv: source .venv/bin/activate
-6. Add fastapi: uv add "fastapi[standard]"
-8. Run: 
+2. Init project: uv init py-site-w-md-files and cd into it
+3. Create a package with cmd: uv init --package md-website-pkg
+4. Test it by running cmd: uv run --directory md-website-pkg md-website-pkg
+5. Create a lib with cmd: uv init --lib md-website-lib
+6. Test it by running cmd: uv run --directory md-website-lib python -c "import md_website_lib; print(md_website_lib.hello())"
+7. Launch vscode: code py-site-w-md-files
+8. Create .venv: uv venv --python 3.12
+9. Activate venv: source .venv/bin/activate
+10. Add fastapi: uv add "fastapi[standard]"
+11. Run: 
     a. "uv run fastapi run main.py"
     b. or "uv run uvicorn main:app --reload"
     c. or "uv run --env-file=.env uvicorn main:app --reload"

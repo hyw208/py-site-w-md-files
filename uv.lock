@@ -1,6 +1,13 @@
 version = 1
 requires-python = ">=3.12"
 
+[manifest]
+members = [
+    "md-website-lib",
+    "md-website-pkg",
+    "py-site-w-md-files",
+]
+
 [[package]]
 name = "annotated-types"
 version = "0.7.0"
@@ -257,6 +264,16 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/82/78/fedb03c7d5380df2427038ec8d973587e90561b2d90cd472ce9254cf348b/MarkupSafe-3.0.2-cp313-cp313t-win32.whl", hash = "sha256:ba8062ed2cf21c07a9e295d5b8a2a5ce678b913b45fdf68c32d95d6c1291e0b6", size = 15208 },
     { url = "https://files.pythonhosted.org/packages/4f/65/6079a46068dfceaeabb5dcad6d674f5f5c61a6fa5673746f42a9f4c233b3/MarkupSafe-3.0.2-cp313-cp313t-win_amd64.whl", hash = "sha256:e444a31f8db13eb18ada366ab3cf45fd4b31e4db1236a4448f68778c1d1a5a2f", size = 15739 },
 ]
+
+[[package]]
+name = "md-website-lib"
+version = "0.1.0"
+source = { editable = "md-website-lib" }
+
+[[package]]
+name = "md-website-pkg"
+version = "0.1.0"
+source = { editable = "md-website-pkg" }
 
 [[package]]
 name = "mdurl"
