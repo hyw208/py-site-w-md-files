@@ -30,14 +30,18 @@ content = os.getenv('MD_FILES_DIR', 'content')
 logging.info(f"####### content directory of md files: {content} #######")
 
 def get_folders_and_md_files_and_file_text(path):
-    # full path starting from content path ps. os.path.join(content, path) doesn't give desire result when path is empty
-    file_path = os.sep.join([content, path]) 
-    logging.info(f"####### file path with content: {file_path} #######")
-    # path from url without the leading content path
-    relative_file_path = file_path.removeprefix(content) 
-    logging.info(f"####### relative file path w/o content: {relative_file_path} #######")
+    logging.info(f"####### raw path w/o content dir: {path} #######")
 
-    if not os.path.exists(file_path):
+    # full path starting from content path ps. os.path.join(content, path) doesn't give desire result when path is empty
+    abs_path = os.sep.join([content, path]) 
+    logging.info(f"####### abs_path with content dir: {abs_path} #######")
+    
+    # path from url without the leading content path
+    rel_path = abs_path.removeprefix(content) 
+    logging.info(f"####### rel_path w/o content dir: {rel_path} #######")
+
+    if not os.path.exists(abs_path):
+        logging.error(f"The abs_path {abs_path} does not exist!")
         raise ValueError(f"The path {path} does not exist!")
 
     items = {
@@ -46,53 +50,64 @@ def get_folders_and_md_files_and_file_text(path):
     }
 
     file_name = ""
-    file_dir = ""
-    relative_file_dir = ""
-    relative_file_name = ""
-    file_text = ""
-    if os.path.isfile(file_path):
-        logging.info(f"####### {file_path} is file #######")
-        file_name = os.path.basename(file_path)
-        file_dir = os.path.dirname(file_path)
-        relative_file_name = file_name.removeprefix(content)
-        relative_file_dir = file_dir.removeprefix(content)
+    abs_file_dir = ""
+    rel_file_dir = ""
+    file_content = ""
+    if os.path.isfile(abs_path):
+        logging.info(f"####### abs_path {abs_path} is a file #######")
+        file_name = os.path.basename(abs_path)
+        """ 
+        abs_file_dir = os.path.dirname(abs_path)
+        
+        the line about doesn't handle well for case, eg. content/home.md 
+        where abs_file_dir becomes 'content' instead of the desired 'content/'
+        """
+        tokens = abs_path.split(os.sep)
+        tokens[-1] = ""
+        abs_file_dir = os.sep.join(tokens)
+        
+        rel_file_dir = abs_file_dir.removeprefix(content)
         try:
-            with open(file_path, "r") as f:
-                file_text = f.read() 
+            with open(abs_path, "r") as f:
+                file_content = f.read() 
         except Exception as ex:
-                file_text = f"error reading file {file_path}, {ex}"
-        file_path = file_dir
+                file_content = f"error reading file {abs_path}, {ex}"
     else:
-        logging.info(f"####### {file_path} is directory #######")
+        logging.info(f"####### abs_path {abs_path} is a directory #######")
 
-    with os.scandir(file_path) as entries:
+    abs_scan_dir = abs_file_dir if abs_file_dir else abs_path
+    rel_scan_dir = abs_scan_dir.removeprefix(content)
+    logging.info(f"####### abs_scan_dir is {abs_scan_dir} #######")
+    logging.info(f"####### rel_scan_dir is {rel_scan_dir} #######")
+
+    with os.scandir(abs_scan_dir) as entries:
         for entry in entries:
             if entry.is_file() and entry.name.lower().endswith(".md"):
                 _fn = entry.path.removeprefix(content)
-                items['md_files'].append({'name': entry.name,'relative_path': _fn})
+                items['md_files'].append({'name': entry.name,'rel_path': _fn})
             elif entry.is_dir():
                 _sn = entry.path.removeprefix(content)
-                items['subfolders'].append({'name': entry.name,'relative_path': _sn})
+                items['subfolders'].append({'name': entry.name,'rel_path': _sn})
 
-    return items['subfolders'], items['md_files'], file_text, relative_file_dir, relative_file_name, relative_file_path
+    return rel_scan_dir, items['subfolders'], items['md_files'], file_name, file_content
 
 def get_html_content(file_path):
     # get abs and relative paths and names
-    subfolders, md_files, file_text, relative_file_dir, relative_file_name, relative_file_path = get_folders_and_md_files_and_file_text(file_path)
+    rel_scan_dir, subfolders, md_files, file_name, file_content = get_folders_and_md_files_and_file_text(file_path)
 
     # get sub folders and files & render folder portion
     _folder = folder.render(subfolders=subfolders, md_files=md_files)
     logging.debug("####### " + _folder)
 
     # get file content and render md into html
-    _file = file.render(file_text=markdown.markdown(file_text))
+    _file = file.render(file_content=markdown.markdown(file_content))
     logging.debug("####### " + _file)
     
     # now render all 
     _style = style.render()
     _header = header.render()
-    _body = body.render(relative_file_path=relative_file_path, 
-                            relative_file_name=relative_file_name,
+    _body = body.render(rel_scan_dir=rel_scan_dir, 
+                            file_name=file_name,
                                 folder=_folder, file=_file)
 
     _html = html.render(style=_style, header=_header, body=_body)
