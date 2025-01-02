@@ -1,9 +1,9 @@
-<div class="parent">
-    <div class="left">
+<div class="container">
+    <div class="folder">
         <h4>Folder: {{relative_file_path}}</h4>
         {{folder}}
     </div>
-    <div class="right">
+    <div class="file">
         <h4>File: {{relative_file_name}}</h4>
         {{file}}
     </div>
