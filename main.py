@@ -1,12 +1,11 @@
 import os
+import time
+import logging
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, FileResponse
 from jinja2 import Template, Environment, FileSystemLoader
 import markdown
-from pathlib import Path
-import logging
-import time
-import uvicorn
+from cachetools import TTLCache, cached
 
 logging.basicConfig(
     level=logging.INFO,  # Set the minimum level to log
@@ -24,8 +23,6 @@ file = environment.get_template("file") # to render md file panel
 body = environment.get_template("body") # to render combo of folder panel & md text panel
 html = environment.get_template("html") # to render html 
 
-app = FastAPI()
-
 website_name = os.getenv('WEBSITE_NAME', 'Welcome to Markdown Website')
 logging.info(f"####### WEBSITE_NAME: {website_name} #######")
 
@@ -35,6 +32,15 @@ logging.info(f"####### MD_FILES_DIR: {content} #######")
 header_items = os.getenv('HEADER_ITEMS', 'home,services,contact').split(",")
 logging.info(f"####### HEADER_ITEMS: {header_items} #######")
 
+cache_size = int(os.getenv('CACHE_SIZE', '100'))
+logging.info(f"####### CACHE_SIZE: {cache_size} #######")
+
+cache_ttl = int(os.getenv('CACHE_TTL', '0')) # in seconds
+logging.info(f"####### CACHE_TTL: {cache_ttl} #######")
+
+cache = TTLCache(maxsize=cache_size, ttl=cache_ttl)
+
+@cached(cache)
 def get_folders_and_md_files_and_file_text(path):
     logging.info(f"####### raw path w/o content dir: {path} #######")
 
@@ -97,6 +103,7 @@ def get_folders_and_md_files_and_file_text(path):
 
     return rel_scan_dir, items['subfolders'], items['md_files'], file_name, file_content
 
+@cached(cache)
 def get_html_content(file_path):
     # get abs and relative paths and names
     rel_scan_dir, subfolders, md_files, file_name, file_content = get_folders_and_md_files_and_file_text(file_path)
@@ -112,12 +119,11 @@ def get_html_content(file_path):
     # now render all 
     _style = style.render()
     _header = header.render(website_name=website_name, items=header_items)
-    _body = body.render(rel_scan_dir=rel_scan_dir, 
-                            file_name=file_name,
-                                folder=_folder, file=_file)
-
+    _body = body.render(rel_scan_dir=rel_scan_dir, file_name=file_name, folder=_folder, file=_file)
     _html = html.render(style=_style, header=_header, body=_body)
     return _html
+
+app = FastAPI()
 
 @app.get("/favicon.ico", include_in_schema=False)
 def get_favicon(name: str):
@@ -128,4 +134,6 @@ def get_html(file_path: str):
     return get_html_content(file_path)
 
 if __name__ == "__main__":
+    import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
+
