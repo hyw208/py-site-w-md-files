@@ -17,7 +17,7 @@ Still trying to figure out how to use uv python package mgr to create cli app. M
 
 # What's next? 
 1. you can remove all sub folders and md files except md files mentioned in templates/header file. 
-2. or you can point the root folder in .env file to folder other than root
+2. or you can point the content folder in .env file to folder other than content
 3. or you can customize files under templates folder, eg. look and feel, change welcome message to something else
 
 # Misc

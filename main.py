@@ -26,16 +26,16 @@ html = environment.get_template("html") # to render html
 
 app = FastAPI()
 
-root = os.getenv('MD_FILES_ROOT', 'root') 
-logging.info(f"####### root directory of md files: {root} #######")
+content = os.getenv('MD_FILES_content', 'content') 
+logging.info(f"####### content directory of md files: {content} #######")
 
 def get_folders_and_md_files_and_file_text(path):
-    # full path starting from root path ps. os.path.join(root, path) doesn't give desire result when path is empty
-    file_path = os.sep.join([root, path]) 
-    logging.info(f"####### file path with root: {file_path} #######")
-    # path from url without the leading root path
-    relative_file_path = file_path.removeprefix(root) 
-    logging.info(f"####### relative file path w/o root: {relative_file_path} #######")
+    # full path starting from content path ps. os.path.join(content, path) doesn't give desire result when path is empty
+    file_path = os.sep.join([content, path]) 
+    logging.info(f"####### file path with content: {file_path} #######")
+    # path from url without the leading content path
+    relative_file_path = file_path.removeprefix(content) 
+    logging.info(f"####### relative file path w/o content: {relative_file_path} #######")
 
     if not os.path.exists(file_path):
         raise ValueError(f"The path {path} does not exist!")
@@ -54,8 +54,8 @@ def get_folders_and_md_files_and_file_text(path):
         logging.info(f"####### {file_path} is file #######")
         file_name = os.path.basename(file_path)
         file_dir = os.path.dirname(file_path)
-        relative_file_name = file_name.removeprefix(root)
-        relative_file_dir = file_dir.removeprefix(root)
+        relative_file_name = file_name.removeprefix(content)
+        relative_file_dir = file_dir.removeprefix(content)
         try:
             with open(file_path, "r") as f:
                 file_text = f.read() 
@@ -68,10 +68,10 @@ def get_folders_and_md_files_and_file_text(path):
     with os.scandir(file_path) as entries:
         for entry in entries:
             if entry.is_file() and entry.name.lower().endswith(".md"):
-                _fn = entry.path.removeprefix(root)
+                _fn = entry.path.removeprefix(content)
                 items['md_files'].append({'name': entry.name,'relative_path': _fn})
             elif entry.is_dir():
-                _sn = entry.path.removeprefix(root)
+                _sn = entry.path.removeprefix(content)
                 items['subfolders'].append({'name': entry.name,'relative_path': _sn})
 
     return items['subfolders'], items['md_files'], file_text, relative_file_dir, relative_file_name, relative_file_path
