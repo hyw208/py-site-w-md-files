@@ -9,8 +9,15 @@ from utils.cache import getCache, getCached
 cached = getCached()
 cache = getCache()
 
+# environment variables
 content = os.getenv('MD_FILES_DIR', 'content') 
 logging.info(f"####### MD_FILES_DIR: {content} #######")
+
+website_name = os.getenv('WEBSITE_NAME', 'Welcome to Markdown Website')
+logging.info(f"####### WEBSITE_NAME: {website_name} #######")
+
+header_items = os.getenv('HEADER_ITEMS', 'home,services,search,contact').split(",")
+logging.info(f"####### HEADER_ITEMS: {header_items} #######")
 
 # jinja templates
 environment = Environment(loader=FileSystemLoader("templates/"))
@@ -21,12 +28,6 @@ file = environment.get_template("file") # to render md file panel
 error = environment.get_template("error") # to render md file panel
 body = environment.get_template("body") # to render combo of folder panel & md text panel
 html = environment.get_template("html") # to render html 
-
-website_name = os.getenv('WEBSITE_NAME', 'Welcome to Markdown Website')
-logging.info(f"####### WEBSITE_NAME: {website_name} #######")
-
-header_items = os.getenv('HEADER_ITEMS', 'home,services,search,contact').split(",")
-logging.info(f"####### HEADER_ITEMS: {header_items} #######")
 
 @cached(cache)
 def get_folders_and_md_files_and_file_text(path):
