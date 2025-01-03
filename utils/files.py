@@ -29,6 +29,10 @@ error = environment.get_template("error") # to render md file panel
 body = environment.get_template("body") # to render combo of folder panel & md text panel
 html = environment.get_template("html") # to render html 
 
+# render more static templates
+_header = header.render(website_name=website_name, items=header_items)
+_style = style.render()
+
 @cached(cache)
 def get_folders_and_md_files_and_file_text(path):
     logging.info(f"####### raw path w/o content dir: {path} #######")
@@ -108,8 +112,6 @@ def get_html_content(file_path):
     logging.debug("####### " + _file + "####### ")
     
     # now render all 
-    _style = style.render()
-    _header = header.render(website_name=website_name, items=header_items)
     _body = body.render(rel_scan_dir=rel_scan_dir, file_name=file_name, folder=_folder, file=_file)
     _html = html.render(style=_style, header=_header, body=_body)
     return _html
