@@ -58,6 +58,11 @@ body {
     overflow: auto;
     flex-grow: 1; /* div will collapse w/o it */
 }
+.error {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #f74266;
+}
 .folder li {
     margin: 10px 0;
 }
