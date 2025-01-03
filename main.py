@@ -30,7 +30,7 @@ logging.info(f"####### WEBSITE_NAME: {website_name} #######")
 content = os.getenv('MD_FILES_DIR', 'content') 
 logging.info(f"####### MD_FILES_DIR: {content} #######")
 
-header_items = os.getenv('HEADER_ITEMS', 'home,services,contact').split(",")
+header_items = os.getenv('HEADER_ITEMS', 'home,services,search,contact').split(",")
 logging.info(f"####### HEADER_ITEMS: {header_items} #######")
 
 cache_size = int(os.getenv('CACHE_SIZE', '100'))
@@ -131,6 +131,13 @@ app = FastAPI()
 @app.get("/favicon.ico", include_in_schema=False)
 def get_favicon(name: str):
     return FileResponse("screen.png")
+
+@app.get("/search")
+def search_files(type: str | None = None, query: str | None = None, page: int = 1):
+    logging.info(f"####### type: {type} #######")
+    logging.info(f"####### query: {query} #######")
+    logging.info(f"####### page: {page} #######")
+    return f"search type({type}), query({query}), page({page})"
 
 @app.get("/{file_path:path}", response_class=HTMLResponse)
 def get_html(file_path: str):
