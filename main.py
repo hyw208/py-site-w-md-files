@@ -1,12 +1,6 @@
-from fastapi import FastAPI
+from utils.app import getApp
 
-app = FastAPI()
-
-# orgnize apis across routers/modules, *** order does matter ***
-from routers import misc, search, browse
-app.include_router(misc.router)
-app.include_router(search.router)
-app.include_router(browse.router)
+app = getApp()
 
 if __name__ == "__main__":
     import uvicorn
