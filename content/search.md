@@ -1,13 +1,13 @@
+
+#### title: a search tool
+#### tags: search tool 
+
 <h2>Search with Woosh~</h2>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js">
 </script>
 
 <div>
-    <div>
-        <p id="hello">
-        </p>
-    </div>
     <div>
         <label for="type">Type:</label>
         <input type="text" id="type" name="type" size="50" value="eg. tags, content etc"/>
@@ -30,7 +30,6 @@
 
 <script>  
     $(document).ready(function() {  
-        $("#hello").html("Hi there~");
         $("#go").on("click", function() {
             var type = $("#type").val();
             var query = $("#query").val();
